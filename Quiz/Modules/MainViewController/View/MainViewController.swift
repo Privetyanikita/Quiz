@@ -12,7 +12,7 @@ final class MainViewController: UIViewController {
     private let supportingImageView: UIImageView = {
         let element = UIImageView()
         element.image = UIImage(systemName: "questionmark")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
-        element.contentMode = .scaleToFill
+        element.contentMode = .scaleAspectFit
         element.isUserInteractionEnabled = true
         return element
     }()
@@ -20,7 +20,7 @@ final class MainViewController: UIViewController {
     private let titleScreenLabel: UILabel = {
         let element = UILabel()
         element.textAlignment = .center
-        element.text = "Правильных ответов".uppercased()
+        element.text = StringsData.MainView.correctAnswer.uppercased()
         element.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         element.textColor = .black
         return element
@@ -36,17 +36,31 @@ final class MainViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = UIColor(red: 248/255, green: 255/255, blue: 228, alpha: 1)
-        view.add(subviews: progressView)
+        view.backgroundColor = Colors.BacgroundViewColor
+        view.add(subviews: supportingImageView, titleScreenLabel, progressView)
+        progressView.progressLabel = 25
+        title = StringsData.MainView.titleNavigation.uppercased()
     }
 }
 
 extension MainViewController {
     private func setupConstrains() {
+        supportingImageView.snp.makeConstraints { make in
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(18)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(9)
+            make.width.equalTo(25)
+            make.height.equalTo(24)
+        }
+        
+        titleScreenLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(26)
+        }
         
         progressView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.height.equalTo(80)
+            make.centerX.equalToSuperview()
+            make.top.equalTo(titleScreenLabel.snp.bottom).offset(26)
+            make.width.height.equalTo(150)
         }
     }
 }
