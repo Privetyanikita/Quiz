@@ -5,7 +5,6 @@
 //  Created by NikitaKorniuk   on 11.02.25.
 //
 
-import Foundation
 import UIKit
 
 enum Colors {
@@ -21,7 +20,7 @@ enum Colors {
     enum ButtonsMainView {
         static let BlueColor = setupColor(red: 77, green: 171, blue: 247, alpha: 1)
         static let BlueBorderColor = setupColor(red: 34, green: 139, blue: 230, alpha: 1)
-        static let WhiteColor = setupColor(red: 248, green: 215, blue: 155, alpha: 1)
+        static let WhiteColor = setupColor(red: 248, green: 255, blue: 228, alpha: 1)
         static let WhiteBorderColor = setupColor(red: 199, green: 215, blue: 155, alpha: 1)
     }
     

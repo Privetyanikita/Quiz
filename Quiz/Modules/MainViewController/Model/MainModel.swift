@@ -5,4 +5,8 @@
 //  Created by NikitaKorniuk   on 09.02.25.
 //
 
-import Foundation
+import UIKit
+
+struct FlagsCountry {
+    let image: UIImage
+}
