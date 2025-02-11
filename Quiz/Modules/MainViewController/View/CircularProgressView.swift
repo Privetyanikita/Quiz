@@ -18,6 +18,7 @@ class CircularProgressView: UIView {
                                     endAngle: 1.5 * CGFloat.pi,
                                     clockwise: true).cgPath
         element.fillColor = UIColor.clear.cgColor
+        element.strokeColor = UIColor.red.cgColor
         element.lineWidth = 8
         element.lineCap = .round
         element.strokeEnd = 0
@@ -32,6 +33,7 @@ class CircularProgressView: UIView {
                                     endAngle: 1.5 * CGFloat.pi,
                                     clockwise: true).cgPath
         element.fillColor = UIColor.clear.cgColor
+        element.strokeColor = UIColor.lightGray.withAlphaComponent(0.3).cgColor
         element.lineWidth = 8
         element.lineCap = .round
         return element
@@ -47,18 +49,6 @@ class CircularProgressView: UIView {
     }()
     
     private(set) var progress: CGFloat = 0
-    
-    private var progressColor: UIColor = .red {
-        didSet {
-            progressLayer.strokeColor = progressColor.cgColor
-        }
-    }
-    
-    private var trackColor: UIColor = UIColor.lightGray.withAlphaComponent(0.3) {
-        didSet {
-            trackLayer.strokeColor = trackColor.cgColor
-        }
-    }
     
     private(set) var progressTrueAnswer = 0 {
         didSet {
@@ -78,23 +68,17 @@ class CircularProgressView: UIView {
     }
     
     private func setupView() {
-        setupColorsForLayers()
-        
         [trackLayer, progressLayer].forEach { layer.addSublayer($0) }
         add(subviews: label)
-    }
-    
-    private func setupColorsForLayers() {
-        trackLayer.strokeColor = trackColor.cgColor
-        progressLayer.strokeColor = progressColor.cgColor
     }
     
     private func updateProgress() {
         progressLayer.strokeEnd = progress
         label.text = "\(progressTrueAnswer)/50"
+        updateStrokeColor()
     }
     
-    func setProgress(valueTrueAntworted: Int, animated: Bool) {
+    func setProgress(valueTrueAntworted: Int, animated: Bool = true) {
         let valueCgFloat = CGFloat(valueTrueAntworted) / 50
         let clampedValue = min(max(valueCgFloat, 0), 1)
         if animated {
@@ -106,6 +90,29 @@ class CircularProgressView: UIView {
         }
         progress = clampedValue
         progressTrueAnswer = valueTrueAntworted
+    }
+    
+    private func updateStrokeColor() {
+        let newColor = colorForProgress(progressTrueAnswer).cgColor
+        let colorAnimation = CABasicAnimation(keyPath: "strokeColor")
+        colorAnimation.fromValue = progressLayer.strokeColor
+        colorAnimation.toValue = newColor
+        colorAnimation.duration = 0.3
+        progressLayer.add(colorAnimation, forKey: "strokeColorAnimation")
+        progressLayer.strokeColor = newColor
+    }
+
+    private func colorForProgress(_ value: Int) -> UIColor {
+        switch value {
+        case 0...20:
+            return .red
+        case 21...35:
+            return .yellow
+        case 36...50:
+            return .green
+        default:
+            return .red
+        }
     }
 }
 
