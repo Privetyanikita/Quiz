@@ -8,37 +8,16 @@
 import UIKit
 import SnapKit
 
-class CircularProgressView: UIView {
+final class CircularProgressView: UIView {
     
     private let progressLayer: CAShapeLayer = {
         let element = CAShapeLayer()
-        element.path = UIBezierPath(arcCenter: CGPoint(x: 40, y: 40),
-                                    radius: 36,
-                                    startAngle: -CGFloat.pi / 2,
-                                    endAngle: 1.5 * CGFloat.pi,
-                                    clockwise: true).cgPath
         element.fillColor = UIColor.clear.cgColor
-        element.strokeColor = UIColor.red.cgColor
-        element.lineWidth = 8
+        element.strokeColor = Colors.CircularProgress.RedColor.cgColor
         element.lineCap = .round
         element.strokeEnd = 0
         return element
     }()
-    
-    private let trackLayer: CAShapeLayer = {
-        let element = CAShapeLayer()
-        element.path = UIBezierPath(arcCenter: CGPoint(x: 40, y: 40),
-                                    radius: 36,
-                                    startAngle: -CGFloat.pi / 2,
-                                    endAngle: 1.5 * CGFloat.pi,
-                                    clockwise: true).cgPath
-        element.fillColor = UIColor.clear.cgColor
-        element.strokeColor = UIColor.lightGray.withAlphaComponent(0.3).cgColor
-        element.lineWidth = 8
-        element.lineCap = .round
-        return element
-    }()
-    
     
     private let label: UILabel = {
         let element = UILabel()
@@ -47,6 +26,14 @@ class CircularProgressView: UIView {
         element.textColor = .darkGray
         return element
     }()
+    
+    var progressLineWidth: CGFloat = 15 {
+        didSet { updateLayers() }
+    }
+    
+    var progressLabel: CGFloat = 16 {
+        didSet { updateLayers() }
+    }
     
     private(set) var progress: CGFloat = 0
     
@@ -64,12 +51,31 @@ class CircularProgressView: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupView()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateLayers()
     }
     
     private func setupView() {
-        [trackLayer, progressLayer].forEach { layer.addSublayer($0) }
+        [progressLayer].forEach { layer.addSublayer($0) }
         add(subviews: label)
+    }
+    
+    private func updateLayers() {
+        let size = min(bounds.width, bounds.height)
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let radius = (size / 2) - (progressLineWidth / 2)
+        let path = UIBezierPath(arcCenter: center,
+                                radius: radius,
+                                startAngle: -CGFloat.pi / 2,
+                                endAngle: 1.5 * CGFloat.pi,
+                                clockwise: true).cgPath
+        
+        progressLayer.path = path
+        progressLayer.lineWidth = progressLineWidth
+        label.font = UIFont.systemFont(ofSize: progressLabel, weight: .bold)
     }
     
     private func updateProgress() {
@@ -101,17 +107,17 @@ class CircularProgressView: UIView {
         progressLayer.add(colorAnimation, forKey: "strokeColorAnimation")
         progressLayer.strokeColor = newColor
     }
-
+    
     private func colorForProgress(_ value: Int) -> UIColor {
         switch value {
         case 0...20:
-            return .red
+            return Colors.CircularProgress.RedColor
         case 21...35:
-            return .yellow
+            return Colors.CircularProgress.OrangeColor
         case 36...50:
-            return .green
+            return Colors.CircularProgress.GreenColor
         default:
-            return .red
+            return Colors.CircularProgress.RedColor
         }
     }
 }
