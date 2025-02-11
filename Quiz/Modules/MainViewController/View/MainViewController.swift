@@ -43,6 +43,7 @@ final class MainViewController: UIViewController {
 
 extension MainViewController {
     private func setupConstrains() {
+        
         progressView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.width.height.equalTo(80)
