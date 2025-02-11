@@ -8,9 +8,11 @@
 import Foundation
 
 enum StringsData {
-    static let titleNavigation = "Language quizzes"
-    static let correctAnswer = "Правильных ответов"
-    static let titleButtonOffline = "Оффлайн"
-    static let titleButtonOnline = "Онлайн"
+    enum MainView {
+        static let titleNavigation = "Language quizzes"
+        static let correctAnswer = "Правильных ответов"
+        static let titleButtonOffline = "Оффлайн"
+        static let titleButtonOnline = "Онлайн"
+    }
 }
 
