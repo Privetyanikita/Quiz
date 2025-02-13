@@ -51,6 +51,7 @@ final class MainViewController: UIViewController {
                                            borderColor: Colors.ButtonsMainView.WhiteBorderColor)
     
     private let progressView = CircularProgressView()
+    private var selectedIndexPath: IndexPath? = nil
     private let flags = [
         FlagsCountry(image: Icons.GermanyFlagIcon),
         FlagsCountry(image: Icons.UnitedKingdomFlagIcon),
@@ -63,7 +64,9 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setupConstrains()
-        progressView.setProgress(valueTrueAntworted: 40, animated: true)
+        progressView.setProgress(valueTrueAntworted: 45, animated: true)
+        selectedIndexPath = IndexPath(item: 0, section: 0)
+        flagsCollectionView.reloadData()
     }
     //MARK: - Methods
     private func setupViews() {
@@ -91,12 +94,12 @@ extension MainViewController {
         
         titleScreenLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(26)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(50)
         }
         
         progressView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(titleScreenLabel.snp.bottom).offset(26)
+            make.top.equalTo(titleScreenLabel.snp.bottom).offset(40)
             make.width.height.equalTo(150)
         }
         
@@ -107,14 +110,14 @@ extension MainViewController {
             make.height.equalTo(114)
         }
         
-        offlineButton.snp.makeConstraints { make in
-            make.top.equalTo(flagsCollectionView.snp.bottom).offset(45)
+        onlineButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(25)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(50)
         }
         
-        onlineButton.snp.makeConstraints { make in
-            make.top.equalTo(offlineButton.snp.bottom).offset(18)
+        offlineButton.snp.makeConstraints { make in
+            make.bottom.equalTo(onlineButton.snp.top).inset(-20)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(50)
         }
@@ -128,14 +131,21 @@ extension MainViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FlagCollectionViewCell.indetifier, for: indexPath) as? FlagCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(with: flags[indexPath.row])
+        let isSelected = indexPath == selectedIndexPath
+        cell.configure(with: flags[indexPath.row], isSelected: isSelected)
         return cell
     }
-    
-    
 }
 
 extension MainViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let previousIndexPath = selectedIndexPath
+        selectedIndexPath = indexPath
+        var indexPathsToReload: [IndexPath] = [indexPath]
+        if let previous = previousIndexPath, previous != indexPath {
+            indexPathsToReload.append(previous)
+        }
+        collectionView.reloadItems(at: indexPathsToReload)
+    }
 }
 

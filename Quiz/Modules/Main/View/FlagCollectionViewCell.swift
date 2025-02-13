@@ -31,11 +31,14 @@ final class FlagCollectionViewCell: UICollectionViewCell {
     private func setupViews() {
         contentView.add(subviews: flagImageView)
         contentView.layer.cornerRadius = 10
+        contentView.layer.borderWidth = 3
+        contentView.layer.borderColor = Colors.FlagCollectionViewCell.DarkGreen.cgColor
         contentView.layer.masksToBounds = true
     }
     
-    func configure(with flag: FlagsCountry) {
+    func configure(with flag: FlagsCountry, isSelected: Bool) {
         flagImageView.image = flag.image
+        contentView.alpha = isSelected ? 1.0 : 0.5
     }
 }
 

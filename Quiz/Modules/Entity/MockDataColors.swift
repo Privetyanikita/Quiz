@@ -24,6 +24,10 @@ enum Colors {
         static let WhiteBorderColor = setupColor(red: 199, green: 215, blue: 155, alpha: 1)
     }
     
+    enum FlagCollectionViewCell{
+        static let DarkGreen = setupColor(red: 11, green: 115, blue: 115, alpha: 1)
+    }
+    
     private static func setupColor(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIColor {
         UIColor(red: red/255, green: green/255, blue: blue/255, alpha: alpha)
     }
